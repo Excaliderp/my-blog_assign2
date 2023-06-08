@@ -66,6 +66,7 @@
   outline: inherit;
   text-align: left;
   text-justify: top;
+  height: fit-content;
 
   position: relative;
   padding-top: 5px;
@@ -106,7 +107,8 @@
   white-space: nowrap;
 }
 
-.linkName:hover {
+.linkName:hover,
+.navigationButton:hover {
   transition: all;
   transition-duration: 0.3s;
   transition-timing-function: ease-in-out;
