@@ -30,7 +30,17 @@ return{ error, status, data }
   //Handle add post here
 };
 
-export const removePost = () => {
+export const removePost = async (_, { arg: postId }) => {
+  const { data, error, status } = await supabase
+  .from("posts")
+  .delete()
+  .eq("id", postId)
+
+  console.log({postId})
+
+  console.log("Hello, delete works")
+
+  return { error, status, data }
   //Handle remove post here
 };
 

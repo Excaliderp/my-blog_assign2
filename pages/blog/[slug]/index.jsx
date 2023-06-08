@@ -10,7 +10,6 @@ import useSWRMutation from "swr/mutation"
 
 import { getPost, postsCacheKey, removePost } from "../../../api-routes/posts";
 
-
 export default function BlogPost() {
   const router = useRouter();
 
@@ -25,9 +24,19 @@ export default function BlogPost() {
   const {trigger: removeTrigger} = useSWRMutation(postsCacheKey, removePost)
   // const removedPost = { id: post.id }
   
-  const handleDeletePost = (_, {postId}) => {
+  const handleDeletePost = async () => {
+    const postId = post.id
     console.log({ id: post.id });
-    console.log({postId})
+    console.log({id: postId})
+
+    const {status, error} = await removeTrigger(postId)
+
+    if (!error) {
+      // Deletion was successful
+      router.push("/blog"); // Redirect to home page
+    } else {
+      console.error("Error deleting post:", error);
+    }
   };
   
   const handleEditPost = () => {
@@ -40,7 +49,7 @@ export default function BlogPost() {
         <Heading>{post.title}</Heading>
         {post?.image && <BlogImageBanner src={post.image} alt={post.title} />}
         <div className={styles.dateContainer}>
-          <time className={styles.date}>{post.createdAt}</time>
+          <time className={styles.date}>{post.created_at}</time>
           <div className={styles.border} />
         </div>
         <div dangerouslySetInnerHTML={{ __html: post.body }} />
