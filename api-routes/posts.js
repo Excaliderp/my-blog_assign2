@@ -19,7 +19,14 @@ export const getPost = async ({ slug }) => {
   //Handle get one post
 };
 
-export const addPost = () => {
+export const addPost = async (_, { arg: newPost }) => {
+  const { data, error, status } = await supabase
+  .from("posts")
+  .insert(newPost)
+  .select()
+  .single()
+
+return{ error, status, data }
   //Handle add post here
 };
 
