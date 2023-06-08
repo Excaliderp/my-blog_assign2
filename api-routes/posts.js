@@ -36,14 +36,24 @@ export const removePost = async (_, { arg: postId }) => {
   .delete()
   .eq("id", postId)
 
-  console.log({postId})
-
-  console.log("Hello, delete works")
-
   return { error, status, data }
   //Handle remove post here
 };
 
-export const editPost = () => {
+export const editPost = async (_, { arg: { editedPost, id } }) => {
+  // const {id, ...postData} = editedPost
+  const { data, error, status } = await supabase
+  .from("posts")
+  .update(editedPost)
+  .select()
+  .single()
+  .eq("id", id)
+
+  // console.log("edit triggades")
+  // console.log({editedPost})
+  console.log("posts js id " + id)
+  // console.log({postData})
+
+return{ error, status, data }
   //Handle edit post here
 };
