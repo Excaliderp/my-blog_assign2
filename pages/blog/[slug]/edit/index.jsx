@@ -5,26 +5,16 @@ import { editPost, postsCacheKey } from "../../../../api-routes/posts";
 import useSWR from "swr";
 import { createSlug } from "@/utils/createSlug";
 
-
-
-
-const mockData = {
-  title: "Community-Messaging Fit",
-  body: "<p>This is a good community fit!</p>",
-  image:
-    "https://media.wired.com/photos/598e35fb99d76447c4eb1f28/16:9/w_2123,h_1194,c_limit/phonepicutres-TA.jpg",
-};
-
 export default function EditBlogPost() {
   const router = useRouter();
   /* Use this slug to fetch the post from the database */
   const { slug } = router.query;
 
-  const { data : { data: post = {} } = {}, error } = useSWR(slug ? `${postsCacheKey}${slug}` : null, () => 
-  getPost({ slug })
-);
+  const { data: { data: post = {} } = {}, error } = useSWR(slug ? `${postsCacheKey}${slug}` : null, () =>
+    getPost({ slug })
+  );
 
-  const {trigger: editTrigger, isMutating} = useSWRMutation(postsCacheKey, editPost, {
+  const { trigger: editTrigger, isMutating } = useSWRMutation(postsCacheKey, editPost, {
     onError: (error) => {
       console.log(error)
     }
@@ -39,11 +29,10 @@ export default function EditBlogPost() {
       title: titleInput,
       slug
     }
-    const {status, error} = await editTrigger({editedPost, id})
-    console.log("index js id " + id)
+    const { status, error } = await editTrigger({ editedPost, id })
 
-    if(!error) {
-      router.push(`/blog/${slug}`)      
+    if (!error) {
+      router.push(`/blog/${slug}`)
     } else {
       console.log(error)
     }
