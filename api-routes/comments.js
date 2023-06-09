@@ -9,11 +9,24 @@ export const getComments = async (postId) => {
     .eq("post_id", postId)
 
   return { data, error, status };
+  
   //Handle get all comments
 };
 
-export const addComment = () => {
+export const addComment = async (_, {arg: newComment}) => {
+  const { data, error, status } = await supabase
+  .from("comments")
+  .insert(newComment)
+  .single()
+  .eq("post_id", newComment.postId)
   //Handle add comment here
+
+  console.log(error)
+
+  console.log(newComment)
+  console.log(newComment.postId)
+
+  return {data, error, status}
 };
 
 export const removeComment = () => {
