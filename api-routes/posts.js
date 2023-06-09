@@ -40,13 +40,13 @@ export const removePost = async (_, { arg: postId }) => {
   //Handle remove post here
 };
 
-export const editPost = async (_, { arg: { editedPost, id } }) => {
+export const editPost = async (_, { arg: editedPost }) => {
   const { data, error, status } = await supabase
     .from("posts")
     .update(editedPost)
     .select()
     .single()
-    .eq("id", id);
+    .eq("id", editedPost.id);
 
   return { error, status, data };
   //Handle edit post here

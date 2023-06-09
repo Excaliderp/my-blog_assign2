@@ -26,8 +26,6 @@ export default function BlogPost() {
   
   const handleDeletePost = async () => {
     const postId = post.id
-    console.log({ id: post.id });
-    console.log({id: postId})
 
     const {status, error} = await removeTrigger(postId)
 
