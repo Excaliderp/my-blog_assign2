@@ -4,6 +4,7 @@ import useSWRMutation from "swr/mutation"
 import { editPost, postsCacheKey, getPost } from "../../../../api-routes/posts";
 import useSWR from "swr";
 import { createSlug } from "@/utils/createSlug";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default function EditBlogPost() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function EditBlogPost() {
       slug,
       id
     }
-    const { status, error } = await editTrigger(editedPost)
+    const { data, error } = await editTrigger(editedPost)
 
     if (!error) {
       router.push(`/blog/${slug}`)
@@ -56,4 +57,33 @@ export default function EditBlogPost() {
       onSubmit={handleOnSubmit}
     />
   );
+}
+
+export const getServerSideProps = async (ctx) => {
+  const supabase = createPagesServerClient(ctx)
+
+  const {slug} = ctx.params
+
+  const { 
+    data: { session } 
+  } = await supabase.auth.getSession()
+
+  const {data} = await supabase.from("posts").select().single().eq("slug", slug)
+
+  console.log(session)
+
+  const isAuthor = data.user_id === session.user.id;
+  
+  if (!isAuthor){
+    return {
+      redirect:{
+        destination: `/blog/${slug}`,
+        permanent: true,
+      }
+    }
+  }
+
+  return {
+    props: {},
+  }
 }
