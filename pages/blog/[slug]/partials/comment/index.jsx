@@ -4,7 +4,7 @@ import { commentsCacheKey, removeComment } from "../../../../../api-routes/comme
 import useSWRMutation from "swr/mutation"
 
 
-export default function Comment({ comment, createdAt, author, id }) {
+export default function Comment({ comment, createdAt, author, id, replyId }) {
 
   const { trigger: removeTrigger, isMutating } = useSWRMutation(commentsCacheKey, removeComment, {
     onError: (error) => {
@@ -18,6 +18,10 @@ export default function Comment({ comment, createdAt, author, id }) {
     const { data, error } = await removeTrigger(id)
   };
 
+  const handleReply = async () => {
+    console.log({replyId})
+  }
+
 
   return (
     <div className={styles.container}>
@@ -28,6 +32,8 @@ export default function Comment({ comment, createdAt, author, id }) {
       {/* The Delete part should only be showed if you are authenticated and you are the author */}
       <div className={styles.buttonContainer}>
         <Button onClick={handleDelete}>Delete</Button>
+        <Button onClick={handleReply}>Reply</Button>
+
       </div>
     </div>
   );
