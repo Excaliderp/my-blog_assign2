@@ -1,11 +1,11 @@
 import { supabase } from "../lib/supabaseClient";
+import { uploadImage } from "../utils/uploadImage";
 
 export const postsCacheKey = "api/blogs";
 
 export const getPosts = async () => {
   const { data, error, status } = await supabase.from("posts").select();
   return { data, error, status };
-  //Handle get all posts
 };
 
 export const getPost = async ({ slug }) => {
@@ -16,18 +16,27 @@ export const getPost = async ({ slug }) => {
     .eq("slug", slug);
 
   return { error, status, data };
-  //Handle get one post
 };
 
 export const addPost = async (_, { arg: newPost }) => {
+  let image = ""
+
+  if (newPost?.image) {
+   const {publicUrl, error} = await uploadImage(newPost?.image);
+
+   if (!error) {
+    image = publicUrl;
+   }
+  }
+
+  console.log(image)
   const { data, error, status } = await supabase
     .from("posts")
-    .insert(newPost)
+    .insert({...newPost, image})
     .select()
     .single();
 
   return { error, status, data };
-  //Handle add post here
 };
 
 export const removePost = async (_, { arg: postId }) => {
@@ -37,17 +46,27 @@ export const removePost = async (_, { arg: postId }) => {
     .eq("id", postId);
 
   return { error, status, data };
-  //Handle remove post here
 };
 
 export const editPost = async (_, { arg: editedPost }) => {
+  let image = editedPost?.image ?? "";
+
+  const isNewImage = typeof image === "object" && image !== null;
+
+  if(isNewImage) {
+    const {publicUrl, error} = await uploadImage(editedPost?.image);
+
+    if (!error) {
+     image = publicUrl;
+    }
+  }
+
   const { data, error, status } = await supabase
     .from("posts")
-    .update(editedPost)
+    .update({...editedPost, image})
     .select()
     .single()
     .eq("id", editedPost.id);
 
   return { error, status, data };
-  //Handle edit post here
 };

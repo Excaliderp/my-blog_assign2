@@ -2,11 +2,26 @@ import Button from "@components/button";
 import styles from "./comment.module.css";
 import { commentsCacheKey, removeComment } from "../../../../../api-routes/comments";
 import useSWRMutation from "swr/mutation"
+import { addReply, getReplies, replyCacheKey } from "../../../../../api-routes/replies";
+import useSWR from "swr";
 
+export default function Comment({ comment, createdAt, author, id, commentId }) {
 
-export default function Comment({ comment, createdAt, author, id, replyId }) {
+  const { data: { data = [] } = {}, error } = useSWR(commentId ? replyCacheKey : null, () =>
+    getReplies(commentId)
+  )
 
-  const { trigger: removeTrigger, isMutating } = useSWRMutation(commentsCacheKey, removeComment, {
+  const { trigger: removeTrigger, isMutating } = useSWRMutation(
+    commentsCacheKey,
+    removeComment, {
+    onError: (error) => {
+      console.log(error)
+    }
+  })
+
+  const { trigger: replyTrigger, isMutating: replyMutation } = useSWRMutation(
+    replyCacheKey,
+    addReply, {
     onError: (error) => {
       console.log(error)
     }
@@ -18,10 +33,15 @@ export default function Comment({ comment, createdAt, author, id, replyId }) {
     const { data, error } = await removeTrigger(id)
   };
 
-  const handleReply = async () => {
-    console.log({replyId})
-  }
+  const replyId = data.id
 
+  const handleReply = async () => {
+    console.log(replyId)
+    console.log({ id })
+    console.log(commentId)
+
+    // const { data, error } = await replyTrigger()
+  }
 
   return (
     <div className={styles.container}>
@@ -35,6 +55,10 @@ export default function Comment({ comment, createdAt, author, id, replyId }) {
         <Button onClick={handleReply}>Reply</Button>
 
       </div>
+      {data.map((reply) => (
+        <div>{reply.body}</div>
+      ))}
+
     </div>
   );
 }
