@@ -11,14 +11,14 @@ import { useRef } from "react";
 
 export default function Comment({ comment, createdAt, author, id: commentId }) {
 
-  const formRef = useRef(); // create a reference
-
+  const formRef = useRef();
+ 
   const { data: { data = [] } = {}, error } = useSWR(
-    commentId ? `${replyCacheKey}-${commentId}` : null,
+    commentId ? replyCacheKey : null,
     () => getReplies(commentId)
   );
 
-  const { trigger: removeTrigger, isMutating } = useSWRMutation(
+  const { trigger: removeTrigger } = useSWRMutation(
     commentsCacheKey,
     removeComment, {
     onError: (error) => {
@@ -26,7 +26,7 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
     }
   })
 
-  const { trigger: replyTrigger, isMutating: replyMutation } = useSWRMutation(
+  const { trigger: replyTrigger } = useSWRMutation(
     replyCacheKey,
     addReply, {
     onError: (error) => {
@@ -44,17 +44,15 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
   
     const formData = new FormData(event.target);
     const { replyText } = Object.fromEntries(formData);
-    console.log(commentId);
   
     const newReply = {
       body: replyText,
       comment_id: commentId,
     }
     
-    const { data, error } = await replyTrigger(newReply);
+    const { status, data, error } = await replyTrigger(newReply)
   
     formRef.current.reset();
-
   };
 
   return (

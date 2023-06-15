@@ -9,7 +9,7 @@ import useSWRMutation from "swr/mutation"
 
 export default function AddComment({ postId }) {
   const formRef = useRef(); // create a reference
-  
+
   const { trigger: addTrigger, isMutating } = useSWRMutation(
     commentsCacheKey, 
     addComment, {
@@ -20,7 +20,6 @@ export default function AddComment({ postId }) {
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
-    // Alternative way to get the form data
     const formData = new FormData(event.target);
 
     const { author, comment } = Object.fromEntries(formData);
