@@ -17,3 +17,8 @@
   margin-top: 10px;
   gap: 5px;
 }
+
+.replyText {
+  font-size: 14px;
+  margin: 7px;
+}

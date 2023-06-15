@@ -4,7 +4,9 @@ import { uploadImage } from "../utils/uploadImage";
 export const postsCacheKey = "api/blogs";
 
 export const getPosts = async () => {
-  const { data, error, status } = await supabase.from("posts").select();
+  const { data, error, status } = await supabase
+  .from("posts")
+  .select();
   return { data, error, status };
 };
 

@@ -9,8 +9,6 @@ export const getReplies = async (commentId) => {
         .eq("comment_id", commentId)
 
     return { data, error, status };
-
-    //Handle get all comments
 };
 
 export const addReply = async (_, { arg: newReply }) => {
@@ -18,8 +16,7 @@ export const addReply = async (_, { arg: newReply }) => {
         .from("replies")
         .insert(newReply)
         .single()
-        .eq("comment_id", newComment.postId)
-    //Handle add comment here
+        .eq("comment_id", newReply.commentId)
 
     return { data, error, status }
 };
@@ -32,5 +29,4 @@ export const removeReply = async (_, { arg: id }) => {
         .eq("id", id)
 
     return { data, error, status }
-    //Handle remove comment here
 };

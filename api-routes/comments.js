@@ -10,7 +10,6 @@ export const getComments = async (postId) => {
 
   return { data, error, status };
 
-  //Handle get all comments
 };
 
 export const addComment = async (_, { arg: newComment }) => {
@@ -19,7 +18,6 @@ export const addComment = async (_, { arg: newComment }) => {
     .insert(newComment)
     .single()
     .eq("post_id", newComment.postId)
-  //Handle add comment here
 
   return { data, error, status }
 };
@@ -32,5 +30,4 @@ export const removeComment = async (_, { arg: id }) => {
     .eq("id", id)
 
   return { data, error, status }
-  //Handle remove comment here
 };

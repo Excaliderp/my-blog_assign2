@@ -4,12 +4,19 @@ import { commentsCacheKey, removeComment } from "../../../../../api-routes/comme
 import useSWRMutation from "swr/mutation"
 import { addReply, getReplies, replyCacheKey } from "../../../../../api-routes/replies";
 import useSWR from "swr";
+import Input from "../../../../../components/input";
+import Label from "@components/label";
+import { useRef } from "react";
 
-export default function Comment({ comment, createdAt, author, id, commentId }) {
 
-  const { data: { data = [] } = {}, error } = useSWR(commentId ? replyCacheKey : null, () =>
-    getReplies(commentId)
-  )
+export default function Comment({ comment, createdAt, author, id: commentId }) {
+
+  const formRef = useRef(); // create a reference
+
+  const { data: { data = [] } = {}, error } = useSWR(
+    commentId ? `${replyCacheKey}-${commentId}` : null,
+    () => getReplies(commentId)
+  );
 
   const { trigger: removeTrigger, isMutating } = useSWRMutation(
     commentsCacheKey,
@@ -28,37 +35,47 @@ export default function Comment({ comment, createdAt, author, id, commentId }) {
   })
 
   const handleDelete = async () => {
-    console.log({ id });
 
-    const { data, error } = await removeTrigger(id)
+    const { data, error } = await removeTrigger(commentId)
   };
 
-  const replyId = data.id
+  const handleReply = async (event) => {
+    event.preventDefault();
+  
+    const formData = new FormData(event.target);
+    const { replyText } = Object.fromEntries(formData);
+    console.log(commentId);
+  
+    const newReply = {
+      body: replyText,
+      comment_id: commentId,
+    }
+    
+    const { data, error } = await replyTrigger(newReply);
+  
+    formRef.current.reset();
 
-  const handleReply = async () => {
-    console.log(replyId)
-    console.log({ id })
-    console.log(commentId)
-
-    // const { data, error } = await replyTrigger()
-  }
+  };
 
   return (
     <div className={styles.container}>
       <p>{comment}</p>
       <p className={styles.author}>{author}</p>
       <time className={styles.date}>{createdAt}</time>
-
-      {/* The Delete part should only be showed if you are authenticated and you are the author */}
-      <div className={styles.buttonContainer}>
-        <Button onClick={handleDelete}>Delete</Button>
-        <Button onClick={handleReply}>Reply</Button>
-
-      </div>
+  
       {data.map((reply) => (
-        <div>{reply.body}</div>
+        <p className={styles.replyText} key={reply.id}>| {reply.body}</p>
       ))}
-
+  
+      {/* Add the <form> element and onSubmit event handler */}
+      <form ref={formRef} onSubmit={handleReply}>
+        <div className={styles.buttonContainer}>
+          <Button onClick={handleDelete}>Delete</Button>
+          <Label htmlFor="replyText">Reply</Label>
+          <Input id="replyText" name="replyText" />
+          <Button type="submit">Send</Button>
+        </div>
+      </form>
     </div>
   );
 }

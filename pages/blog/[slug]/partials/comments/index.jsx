@@ -11,7 +11,6 @@ export default function Comments({ postId }) {
 
   const { data : { data = [] } = {}, error } = useSWR(postId ? commentsCacheKey : null, () => 
   getComments(postId)
-
 );
 
   return (
