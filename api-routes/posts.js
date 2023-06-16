@@ -79,7 +79,7 @@ export const searchPost = async (_, { arg: searchText }) => {
     .delete()
     .ilike("title", searchText);
 
+    console.log(searchText)
   return { error, status, data };
 
-  console.log(searchText)
 };

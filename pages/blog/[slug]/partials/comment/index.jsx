@@ -14,7 +14,7 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
   const formRef = useRef();
 
   const { data: { data = [] } = {}, error } = useSWR(
-    commentId ? replyCacheKey : null,
+    commentId ? `${replyCacheKey}/${commentId}` : null,
     () => getReplies(commentId)
   );
 
@@ -33,7 +33,7 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
   })
 
   const { trigger: addReplyTrigger } = useSWRMutation(
-    replyCacheKey,
+    `${replyCacheKey}/${commentId}`,
     addReply, {
     onError: (error) => {
       console.log(error)
@@ -41,7 +41,7 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
   })
 
   const { trigger: removeReplyTrigger } = useSWRMutation(
-    replyCacheKey,
+    `${replyCacheKey}/${commentId}`,
     removeReply, {
     onError: (error) => {
       console.log(error)
@@ -71,6 +71,7 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
     console.log({ replyId })
 
     const { data, error } = await removeReplyTrigger(replyId)
+    console.log(replyId)
   }
 
   return (
@@ -80,8 +81,8 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
       <time className={styles.date}>{createdAt}</time>
 
       {data.map((reply) => (
-        <div>
-          <p className={styles.replyText} key={reply.id}>| {reply.body}</p>
+        <div key={reply.id}>
+          <p className={styles.replyText}>| {reply.body}</p>
           <button className={styles.removeReplyButton} onClick={() => handleRemoveReply(reply.id)}>Remove reply</button>
         </div>
       ))}
