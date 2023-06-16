@@ -21,12 +21,12 @@ export const addReply = async (_, { arg: newReply }) => {
     return { data, error, status }
 };
 
-export const removeReply = async (_, { arg: id }) => {
+export const removeReply = async (_, { arg: replyId }) => {
     const { data, error, status } = await supabase
         .from("replies")
-        .delete(id)
+        .delete(replyId)
         .single()
-        .eq("id", id)
+        .eq("id", replyId)
 
     return { data, error, status }
 };

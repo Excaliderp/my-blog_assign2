@@ -22,3 +22,17 @@
   font-size: 14px;
   margin: 7px;
 }
+
+.removeReplyButton {
+  background-color: transparent;
+  border: none;
+  margin-left: 5px;
+  margin-top: 0;
+  font-size: 12px;
+}
+
+.removeReplyButton:hover {
+  color: blue;
+  text-decoration: underline;
+  
+}

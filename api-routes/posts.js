@@ -72,3 +72,14 @@ export const editPost = async (_, { arg: editedPost }) => {
 
   return { error, status, data };
 };
+
+export const searchPost = async (_, { arg: searchText }) => {
+  const { data, error, status } = await supabase
+    .from("posts")
+    .delete()
+    .ilike("title", searchText);
+
+  return { error, status, data };
+
+  console.log(searchText)
+};
