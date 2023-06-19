@@ -3,10 +3,15 @@ import { uploadImage } from "../utils/uploadImage";
 
 export const postsCacheKey = "api/blogs";
 
-export const getPosts = async () => {
+export const getPosts = async (_, {arg: searchText}) => {
   const { data, error, status } = await supabase
-  .from("posts")
-  .select();
+    .from("posts")
+    .select()
+    .containedBy("title", `%${searchText}%`);
+
+  console.log({ searchText })
+  console.log(error)
+
   return { data, error, status };
 };
 
@@ -24,17 +29,17 @@ export const addPost = async (_, { arg: newPost }) => {
   let image = ""
 
   if (newPost?.image) {
-   const {publicUrl, error} = await uploadImage(newPost?.image);
+    const { publicUrl, error } = await uploadImage(newPost?.image);
 
-   if (!error) {
-    image = publicUrl;
-   }
+    if (!error) {
+      image = publicUrl;
+    }
   }
 
   console.log(image)
   const { data, error, status } = await supabase
     .from("posts")
-    .insert({...newPost, image})
+    .insert({ ...newPost, image })
     .select()
     .single();
 
@@ -55,17 +60,17 @@ export const editPost = async (_, { arg: editedPost }) => {
 
   const isNewImage = typeof image === "object" && image !== null;
 
-  if(isNewImage) {
-    const {publicUrl, error} = await uploadImage(editedPost?.image);
+  if (isNewImage) {
+    const { publicUrl, error } = await uploadImage(editedPost?.image);
 
     if (!error) {
-     image = publicUrl;
+      image = publicUrl;
     }
   }
 
   const { data, error, status } = await supabase
     .from("posts")
-    .update({...editedPost, image})
+    .update({ ...editedPost, image })
     .select()
     .single()
     .eq("id", editedPost.id);
@@ -73,13 +78,13 @@ export const editPost = async (_, { arg: editedPost }) => {
   return { error, status, data };
 };
 
-export const searchPost = async (_, { arg: searchText }) => {
-  const { data, error, status } = await supabase
-    .from("posts")
-    .delete()
-    .ilike("title", searchText);
+// export const searchPost = async (_, { arg: searchText }) => {
+//   const { data, error, status } = await supabase
+//     .from("posts")
+//     .select()
+//     .ilike("title", `%${searchText}%`);
 
-    console.log(searchText)
-  return { error, status, data };
+//     console.log(searchText)
+//   return { error, status, data };
 
-};
+// };
