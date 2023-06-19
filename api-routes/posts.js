@@ -85,6 +85,7 @@ export const editPost = async (_, { arg: editedPost }) => {
     .eq("id", editedPost.id);
 
   return { error, status, data };
+
 };
 
 // export const searchPost = async (_, { arg: searchText }) => {

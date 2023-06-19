@@ -32,6 +32,7 @@ export default function Blog() {
 
     const { status, data, error } = await searchTrigger(searchText);
     // mutate();
+
   };
   console.log({data, isLoading, isValidating})
   return (
