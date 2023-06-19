@@ -2,48 +2,52 @@ import Link from "next/link";
 import styles from "./blog.module.css";
 import Heading from "@components/heading";
 import useSWR from "swr";
-import { getPosts, postsCacheKey, searchPost } from "../../api-routes/posts";
-import { useRef } from "react";
+import { postsCacheKey, searchPost } from "../../api-routes/posts";
+import { useEffect, useRef, useState } from "react";
 import useSWRMutation from "swr/mutation"
 import Input from "@components/input";
 import Label from "@components/label";
-import Button from "@components/button";
-
-
 
 export default function Blog() {
-  const { data: { data = [] } = {}, isLoading, isValidating } = useSWR(postsCacheKey, getPosts)
+  // const { data: { data = [] } = {}, mutate, isLoading, isValidating } = useSWR(postsCacheKey, getPosts)
 
-  const { trigger: searchTrigger } = useSWRMutation(
-    postsCacheKey,
-    getPosts, {
+  const [searchText, setSearchText] = useState("")
+
+  const { trigger: searchTrigger, data: { data = [] } = {} } = useSWRMutation(
+    `${postsCacheKey}/${searchText}`,
+    searchPost, {
     onError: (error) => {
       console.log(error)
     }
   })
 
+  useEffect (() => {
+    const fetchData = async () => {
+      await searchTrigger(searchText);
+    }
+    fetchData();
+  }, []);
+
   const formRef = useRef();
 
-  const handleSearchBar = async (event) => {
-    event.preventDefault();
+  const handleOnChange = async (event) => {
+    setSearchText(event.target.value)
+    await searchTrigger(event.target.value)
+  }
 
-    const formData = new FormData(event.target);
-    const { searchText } = Object.fromEntries(formData);
-
-    const { status, data, error } = await searchTrigger(searchText);
-    // mutate();
-
-  };
-  console.log({data, isLoading, isValidating})
   return (
     <section>
       <Heading>Blog</Heading>
 
-      <form ref={formRef} onSubmit={handleSearchBar}>
+      <form ref={formRef}>
         <div className={styles.buttonContainer}>
           <Label htmlFor="replyText" />
-          <Input id="searchText" name="searchText" />
-          <Button type="submit">Search</Button>
+          <Input 
+          onChange={handleOnChange}
+          value={searchText}
+          id="searchText" 
+          name="searchText"
+          />
         </div>
       </form>
 

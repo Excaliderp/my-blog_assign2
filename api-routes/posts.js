@@ -3,23 +3,10 @@ import { uploadImage } from "../utils/uploadImage";
 
 export const postsCacheKey = "api/blogs";
 
-export const getPosts = async (_, {arg: searchText}) => {
-  if(!searchText.length){
-    const { data, error, status } = await supabase
-      .from("posts")
-      .select()
-      // .ilike("title", `%${searchText}%`);    
-      return { data, error, status };
-    }
-
+export const getPosts = async () => {
   const { data, error, status } = await supabase
-  .from("posts")
-  .select()
-  .ilike("title", `%${searchText}%`);   
-
-  console.log({ searchText })
-  console.log(error)
-  console.log(data)
+    .from("posts")
+    .select()
 
   return { data, error, status };
 };
@@ -88,13 +75,13 @@ export const editPost = async (_, { arg: editedPost }) => {
 
 };
 
-// export const searchPost = async (_, { arg: searchText }) => {
-//   const { data, error, status } = await supabase
-//     .from("posts")
-//     .select()
-//     .ilike("title", `%${searchText}%`);
+export const searchPost = async (_, { arg: searchText }) => {
+  const { data, error, status } = await supabase
+    .from("posts")
+    .select()
+    .ilike("title", `%${searchText}%`);
 
-//     console.log(searchText)
-//   return { error, status, data };
+  return { error, status, data };
 
-// };
+
+};
