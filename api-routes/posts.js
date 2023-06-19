@@ -4,13 +4,22 @@ import { uploadImage } from "../utils/uploadImage";
 export const postsCacheKey = "api/blogs";
 
 export const getPosts = async (_, {arg: searchText}) => {
+  if(!searchText.length){
+    const { data, error, status } = await supabase
+      .from("posts")
+      .select()
+      // .ilike("title", `%${searchText}%`);    
+      return { data, error, status };
+    }
+
   const { data, error, status } = await supabase
-    .from("posts")
-    .select()
-    .containedBy("title", `%${searchText}%`);
+  .from("posts")
+  .select()
+  .ilike("title", `%${searchText}%`);   
 
   console.log({ searchText })
   console.log(error)
+  console.log(data)
 
   return { data, error, status };
 };

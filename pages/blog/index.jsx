@@ -12,7 +12,7 @@ import Button from "@components/button";
 
 
 export default function Blog() {
-  const { data: { data = [] } = {}, mutate } = useSWR(postsCacheKey, getPosts)
+  const { data: { data = [] } = {}, isLoading, isValidating } = useSWR(postsCacheKey, getPosts)
 
   const { trigger: searchTrigger } = useSWRMutation(
     postsCacheKey,
@@ -26,15 +26,14 @@ export default function Blog() {
 
   const handleSearchBar = async (event) => {
     event.preventDefault();
-  
+
     const formData = new FormData(event.target);
     const { searchText } = Object.fromEntries(formData);
-  
-    const { status, data, error } = await searchTrigger(searchText);
-  
-    
-  };
 
+    const { status, data, error } = await searchTrigger(searchText);
+    // mutate();
+  };
+  console.log({data, isLoading, isValidating})
   return (
     <section>
       <Heading>Blog</Heading>
