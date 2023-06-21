@@ -14,7 +14,6 @@ export default function EditBlogPost() {
   const { data: { data: post = {} } = {}, error, isLoading } = useSWR(slug ? `${postsCacheKey}${slug}` : null, () =>
     getPost({ slug })
   );
-  console.log(post)
 
   const { trigger: editTrigger, isMutating } = useSWRMutation(postsCacheKey, editPost, {
     onError: (error) => {
@@ -24,7 +23,6 @@ export default function EditBlogPost() {
 
   const handleOnSubmit = async ({ editorContent, titleInput, image }) => {
     const slug = createSlug(titleInput);
-    console.log({ editorContent, titleInput, image, slug });
     const id = post.id
 
     const editedPost = {

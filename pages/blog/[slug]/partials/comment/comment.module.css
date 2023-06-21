@@ -4,13 +4,11 @@
 
 .author {
   font-weight: bold;
-  font-size: 15px;
+  font-size: 14px;
   margin-top: 7px;
+  text-decoration: underline;
 }
 
-.date {
-  font-family: monospace;
-}
 
 .buttonContainer {
   display: flex;
@@ -18,9 +16,38 @@
   gap: 5px;
 }
 
+.comment {
+  margin-top: 0;
+  font-size: 15px;
+}
+
+.commentButtons {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.commentButton {
+  margin-right: 5px;
+  padding: 3px 5px 3px 5px;
+}
+
+.date {
+  font-family: monospace;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+}
+
 .replyText {
-  font-size: 14px;
+  font-size: 12px;
   margin: 7px;
+  margin-bottom: 0;
 }
 
 .removeReplyButton {
@@ -34,5 +61,5 @@
 .removeReplyButton:hover {
   color: blue;
   text-decoration: underline;
-  
+
 }
