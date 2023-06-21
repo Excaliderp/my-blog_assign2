@@ -65,6 +65,8 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
     }
     const { status, data, error } = await addReplyTrigger(newReply)
     formRef.current.reset();
+
+    console.log(error)
   };
 
   const handleRemoveReply = async (replyId) => {
@@ -88,9 +90,9 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
       ))}
 
       {/* Add the <form> element and onSubmit event handler */}
+          <Button onClick={handleDeleteComment}>Delete</Button>
       <form ref={formRef} onSubmit={handleAddReply}>
         <div className={styles.buttonContainer}>
-          <Button onClick={handleDeleteComment}>Delete</Button>
           <Label htmlFor="replyText">Reply</Label>
           <Input id="replyText" name="replyText" />
           <Button type="submit">Send</Button>
