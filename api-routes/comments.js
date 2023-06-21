@@ -9,7 +9,6 @@ export const getComments = async (postId) => {
     .eq("post_id", postId)
 
   return { data, error, status };
-
 };
 
 export const addComment = async (_, { arg: newComment }) => {

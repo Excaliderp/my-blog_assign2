@@ -8,7 +8,7 @@ import { addComment, commentsCacheKey } from "../../../../../api-routes/comments
 import useSWRMutation from "swr/mutation"
 
 export default function AddComment({ postId }) {
-  const formRef = useRef(); // create a reference
+  const formRef = useRef();
 
   const { trigger: addTrigger, isMutating } = useSWRMutation(
     commentsCacheKey, 
@@ -30,7 +30,6 @@ export default function AddComment({ postId }) {
       post_id: postId
     }
     const { status, error } = await addTrigger(newComment)
-    // Reset the form after submission?
     formRef.current.reset();
   };
 

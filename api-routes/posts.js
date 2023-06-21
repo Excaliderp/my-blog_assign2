@@ -32,7 +32,6 @@ export const addPost = async (_, { arg: newPost }) => {
     }
   }
 
-  console.log(image)
   const { data, error, status } = await supabase
     .from("posts")
     .insert({ ...newPost, image })
@@ -72,7 +71,6 @@ export const editPost = async (_, { arg: editedPost }) => {
     .eq("id", editedPost.id);
 
   return { error, status, data };
-
 };
 
 export const searchPost = async (_, { arg: searchText }) => {
@@ -82,6 +80,4 @@ export const searchPost = async (_, { arg: searchText }) => {
     .ilike("title", `%${searchText}%`);
 
   return { error, status, data };
-
-
 };

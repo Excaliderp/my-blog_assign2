@@ -12,6 +12,7 @@ export default function CreatePost() {
       console.log(error)
     }
   })
+  
   const user = useUser();
 
   const handleOnSubmit = async ({ editorContent, titleInput, image }) => {

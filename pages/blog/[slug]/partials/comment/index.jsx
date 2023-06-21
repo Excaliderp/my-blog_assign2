@@ -18,12 +18,6 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
     () => getReplies(commentId)
   );
 
-  // const { data: { data: reply = {} } = {}, error: replyError } = useSWR(
-  //   commentId ? replyCacheKey : null,
-  //   () => getReplies(commentId)
-  // );
-
-
   const { trigger: removeCommentTrigger } = useSWRMutation(
     commentsCacheKey,
     removeComment, {
@@ -49,7 +43,6 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
   })
 
   const handleDeleteComment = async () => {
-
     const { data, error } = await removeCommentTrigger(commentId)
   };
 
@@ -70,10 +63,7 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
   };
 
   const handleRemoveReply = async (replyId) => {
-    console.log({ replyId })
-
     const { data, error } = await removeReplyTrigger(replyId)
-    console.log(replyId)
   }
 
   return (
@@ -89,13 +79,12 @@ export default function Comment({ comment, createdAt, author, id: commentId }) {
         </div>
       ))}
 
-      {/* Add the <form> element and onSubmit event handler */}
-          <Button onClick={handleDeleteComment}>Delete</Button>
-      <form ref={formRef} onSubmit={handleAddReply}>
+      <Button onClick={handleDeleteComment}>Delete</Button>
+      <form ref={formRef}>
         <div className={styles.buttonContainer}>
           <Label htmlFor="replyText">Reply</Label>
           <Input id="replyText" name="replyText" />
-          <Button type="submit">Send</Button>
+          <Button type="submit" onClick={handleAddReply}>Send</Button>
         </div>
       </form>
     </div>

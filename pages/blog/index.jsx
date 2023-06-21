@@ -9,8 +9,6 @@ import Input from "@components/input";
 import Label from "@components/label";
 
 export default function Blog() {
-  // const { data: { data = [] } = {}, mutate, isLoading, isValidating } = useSWR(postsCacheKey, getPosts)
-
   const [searchText, setSearchText] = useState("")
 
   const { trigger: searchTrigger, data: { data = [] } = {} } = useSWRMutation(
